@@ -3,7 +3,7 @@ import csv
 with open ('Resources/election_data.csv') as csvfile:
     csvreader= csv.reader(csvfile,delimiter=',')
     linecount=0
-    next(csvfile)
+    headers=next(csvfile)
     candidates={}
     for row in csvreader:
         

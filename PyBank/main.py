@@ -1,7 +1,11 @@
 import csv
 
+#open data file for reading
 with open ('Resources/budget_data.csv') as csvfile:
     csvreader= csv.reader(csvfile,delimiter=',')
+    #store header row
+    headers=next(csvfile)
+    #declare variables
     linecount=0
     total=0
     deltas=[]
@@ -10,15 +14,14 @@ with open ('Resources/budget_data.csv') as csvfile:
     amountmaxincrease=0
     monthmaxdecrease=''
     amountmaxdecrease=0
+    #iterate each row in data file
     for row in csvreader:
-        if linecount ==0:
-            linecount+=1
-        else:
-            month=row[0]
-            amount=int(row[1])
-            total+=amount
-            
-            
+        # read month and amount accumulating total
+        month=row[0]
+        amount=int(row[1])
+        total+=amount
+        #check for new max deltas for increases and decreases in profitability
+        if linecount>0:
             delta=amount-prioramount
             if (delta>0) and (delta>amountmaxincrease):
                 amountmaxincrease=delta
@@ -26,13 +29,15 @@ with open ('Resources/budget_data.csv') as csvfile:
             if(delta<0) and (delta<amountmaxdecrease):
                 amountmaxdecrease=delta
                 monthmaxdecrease=month
-            if linecount>1:
-               
-                deltas.append(delta)
-            prioramount=amount
-            linecount+=1
-    count=linecount-1  
-    average=sum(deltas)/len(deltas)     
+            # add delta to list
+            deltas.append(delta)
+        # store prior amount
+        prioramount=amount
+        linecount+=1
+    count=linecount 
+    #calculate average of deltas
+    average=sum(deltas)/len(deltas) 
+    #print result of analysis    
     print('Financial Analysis')
     
     print ('----------------------------')
@@ -42,7 +47,7 @@ with open ('Resources/budget_data.csv') as csvfile:
     print(f'Average  Change: ${average:.2f}')
     print(f'Greatest Increase in Profits:{monthmaxincrease} (${amountmaxincrease})')
     print(f'Greatest Decrease in Profits: {monthmaxdecrease} (${amountmaxdecrease})')
-    
+    #store analysis in file
     with open ('analysis/results.txt','w') as fw:
         print('Financial Analysis',file=fw)
         print ('----------------------------',file=fw)
